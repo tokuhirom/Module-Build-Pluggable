@@ -10,7 +10,7 @@ our @ISA;
 our $SUBCLASS;
 our $OPTIONS;
 use Data::OptList;
-use Text::MicroTemplate qw/render_mt/;
+use Text::MicroTemplate qw/build_mt/;
 use Data::Dumper;
 use Module::Load;
 use Module::Build::Pluggable::Util;
@@ -23,10 +23,7 @@ sub import {
 
     _author_requires(map { $_->[0] } @$OPTIONS);
 
-    my $code = join('',
-        'use Class::Method::Modifiers qw/install_modifier/;',
-        map { _mksrc(@$_) } @$OPTIONS
-    );
+    my $code = _mksrc();
     $SUBCLASS = Module::Build->subclass(
         code => $code,
     );
@@ -48,24 +45,29 @@ sub _author_requires {
 }
 
 sub _mksrc {
-    my ($klass, $opts) = @_;
     local $Data::Dumper::Terse = 1;
     local $Data::Dumper::Indent = 0;
-    # XXX Do not install modifiers multiple times.
-    # We need only one modifier. And complex data.
-    return render_mt(<<'...', $klass, Data::Dumper::Dumper($opts));
-? my ($klass, $opts) = @_;
+    my $builder = build_mt({template => <<'...', escape_func => sub { shift }});
+? my ($OPTIONS) = @_;
+use Class::Method::Modifiers qw/install_modifier/;
+use Module::Load ();
+
+my $OPTIONS = <?= $OPTIONS ?>;
 install_modifier(__PACKAGE__, 'around', 'resume', sub {
     my $orig = shift;
     my $builder = $orig->(@_);
-    use <?= $klass ?>;
-    my $plugin = <?= $klass ?>->new(builder => $builder, %{<?= $opts ?> || +{}});
-    if ($plugin->can('HOOK_build')) {
-        $plugin->HOOK_build();
+    for my $row (@{$OPTIONS}) {
+        my ($klass, $opts) = @$row;
+        Module::Load::load($klass);
+        my $plugin = $klass->new(builder => $builder, %{$opts || +{}});
+        if ($plugin->can('HOOK_build')) {
+            $plugin->HOOK_build();
+        }
     }
     return $builder;
 });
 ...
+    return $builder->(Data::Dumper::Dumper($OPTIONS));
 }
 
 sub _mkpluginname {
