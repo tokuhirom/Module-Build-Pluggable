@@ -10,22 +10,24 @@ our @ISA;
 our $SUBCLASS;
 our $OPTIONS;
 use Data::OptList;
-use Text::MicroTemplate qw/build_mt/;
-use Data::Dumper;
+use Data::Dumper; # as serializer.
 use Module::Load;
+use Class::Method::Modifiers qw/install_modifier/;
+use Module::Load ();
 use Module::Build::Pluggable::Util;
 
 sub import {
     my $class = shift;
     my $pkg = caller(0);
+    return unless @_;
+
     my $optlist = Data::OptList::mkopt(\@_);
     $OPTIONS = [map { [ _mkpluginname($_->[0]), $_->[1] ] } @$optlist];
 
     _author_requires(map { $_->[0] } @$OPTIONS);
 
-    my $code = _mksrc();
     $SUBCLASS = Module::Build->subclass(
-        code => $code,
+        code => _mksrc(),
     );
 }
 
@@ -45,29 +47,29 @@ sub _author_requires {
 }
 
 sub _mksrc {
-    local $Data::Dumper::Terse = 1;
-    local $Data::Dumper::Indent = 0;
-    my $builder = build_mt({template => <<'...', escape_func => sub { shift }});
-? my ($OPTIONS) = @_;
-use Class::Method::Modifiers qw/install_modifier/;
-use Module::Load ();
+    my $data = do {
+        local $Data::Dumper::Terse = 1;
+        local $Data::Dumper::Indent = 0;
+        Data::Dumper::Dumper($OPTIONS);
+    };
+    return sprintf(q{use Module::Build::Pluggable; Module::Build::Pluggable->run_build(__PACKAGE__, %s);}, $data);
+}
 
-my $OPTIONS = <?= $OPTIONS ?>;
-install_modifier(__PACKAGE__, 'around', 'resume', sub {
-    my $orig = shift;
-    my $builder = $orig->(@_);
-    for my $row (@{$OPTIONS}) {
-        my ($klass, $opts) = @$row;
-        Module::Load::load($klass);
-        my $plugin = $klass->new(builder => $builder, %{$opts || +{}});
-        if ($plugin->can('HOOK_build')) {
-            $plugin->HOOK_build();
+sub run_build {
+    my ($class, $builder_class, $options) = @_;
+    install_modifier($builder_class, 'around', 'resume', sub {
+        my $orig = shift;
+        my $builder = $orig->(@_);
+        for my $row (@{$options}) {
+            my ($klass, $opts) = @$row;
+            Module::Load::load($klass);
+            my $plugin = $klass->new(builder => $builder, %{$opts || +{}});
+            if ($plugin->can('HOOK_build')) {
+                $plugin->HOOK_build();
+            }
         }
-    }
-    return $builder;
-});
-...
-    return $builder->(Data::Dumper::Dumper($OPTIONS));
+        return $builder;
+    });
 }
 
 sub _mkpluginname {
