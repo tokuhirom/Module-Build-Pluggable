@@ -52,24 +52,15 @@ sub _mksrc {
         local $Data::Dumper::Indent = 0;
         Data::Dumper::Dumper($OPTIONS);
     };
-    return sprintf(q{use Module::Build::Pluggable; Module::Build::Pluggable->run_build(__PACKAGE__, %s);}, $data);
-}
-
-sub run_build {
-    my ($class, $builder_class, $options) = @_;
-    install_modifier($builder_class, 'around', 'resume', sub {
-        my $orig = shift;
-        my $builder = $orig->(@_);
-        for my $row (@{$options}) {
-            my ($klass, $opts) = @$row;
-            Module::Load::load($klass);
-            my $plugin = $klass->new(builder => $builder, %{$opts || +{}});
-            if ($plugin->can('HOOK_build')) {
-                $plugin->HOOK_build();
-            }
+    return sprintf(q{
+        use Module::Build::Pluggable;
+        sub resume {
+            my $class = shift;
+            my $self = $class->SUPER::resume(@_);
+            Module::Build::Pluggable->call_triggers_all('build', $self, %s);
+            $self;
         }
-        return $builder;
-    });
+    }, $data);
 }
 
 sub _mkpluginname {
@@ -83,16 +74,15 @@ sub new {
     my $builder = $SUBCLASS->new(@_);
     my $self = bless { builder => $builder }, $class;
     $self->_init();
+    $self->call_triggers_all('build', $builder, $OPTIONS);
     return $self;
 }
 
 sub _init {
     my $self = shift;
+    # setup (build|configure) requires
     for my $opt (@$OPTIONS) {
         my ($module, $opts) = @$opt;
-        $opts ||= +{};
-        Module::Load::load($module);
-        my $plugin = $module->new(builder => $self->{builder}, %$opts);
         for my $type (qw/configure_requires build_requires/) {
             Module::Build::Pluggable::Util->add_prereqs(
                 $self->{builder},
@@ -100,9 +90,25 @@ sub _init {
                 $module, $module->VERSION,
             );
         }
-        if ($plugin->can('HOOK_configure')) {
-            $plugin->HOOK_configure();
-        }
+    }
+}
+
+sub call_triggers_all {
+    my ($class, $type, $builder, $options) =@_;
+    for my $opt (@$options) {
+        my ($module, $opts) = @$opt;
+        $class->call_trigger($type, $builder, $module, $opts);
+    }
+}
+
+sub call_trigger {
+    my ($class, $type, $builder, $module, $opts) =@_;
+
+    Module::Load::load($module);
+    my $plugin = $module->new(builder => $builder, %{ $opts || +{} });
+    my $method = "HOOK_$type";
+    if ($plugin->can($method)) {
+        $plugin->$method();
     }
 }
 

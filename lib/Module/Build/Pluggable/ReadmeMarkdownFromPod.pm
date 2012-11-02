@@ -17,10 +17,13 @@ sub HOOK_configure {
 sub HOOK_build {
     my ($self) = @_;
     require Pod::Markdown;
+
     my $src = $self->filename || $self->builder->dist_version_from;
     unless ($src) {
         die "Missing filename for ReadmeMarkdownFromPod";
     }
+
+    $self->log_info("Writing README.mkdn\n");
 
     my $parser = Pod::Markdown->new();
     $parser->parse_from_file($src);

@@ -49,6 +49,7 @@ sub configure_requires {
 }
 
 sub log_warn { shift->builder->log_warn(@_) }
+sub log_info { shift->builder->log_info(@_) }
 
 # taken from  M::I::Can
 # Check if we can run some command
