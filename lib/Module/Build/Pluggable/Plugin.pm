@@ -50,5 +50,23 @@ sub configure_requires {
 
 sub log_warn { shift->builder->log_warn(@_) }
 
+# taken from  M::I::Can
+# Check if we can run some command
+use ExtUtils::MakeMaker;
+sub can_run {
+    my ($self, $cmd) = @_;
+
+    my $_cmd = $cmd;
+    return $_cmd if (-x $_cmd or $_cmd = MM->maybe_command($_cmd));
+
+    for my $dir ((split /$Config::Config{path_sep}/, $ENV{PATH}), '.') {
+        next if $dir eq '';
+        require File::Spec;
+        my $abs = File::Spec->catfile($dir, $cmd);
+        return $abs if (-x $abs or $abs = MM->maybe_command($abs));
+    }
+
+    return;
+}
 1;
 
