@@ -23,7 +23,7 @@ sub HOOK_build {
     $self->add_before_action_modifier('build', sub {
         my $self = shift;
         unless (-e $filename) {
-            print "Writing $filename\n";
+            $self->log_info("Writing $filename\n");
             Devel::PPPort::WriteFile($filename);
         }
         $self->add_to_cleanup($filename);
