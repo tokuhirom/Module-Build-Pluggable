@@ -5,14 +5,11 @@ use 5.010001;
 our $VERSION = '0.01';
 use Module::Build;
 
-our @MODULES;
-our @ISA;
 our $SUBCLASS;
 our $OPTIONS;
+
 use Data::OptList;
 use Data::Dumper; # as serializer.
-use Module::Load;
-use Class::Method::Modifiers qw/install_modifier/;
 use Module::Load ();
 use Module::Build::Pluggable::Util;
 

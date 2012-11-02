@@ -12,10 +12,18 @@ my $build = Module::Build->new(
     },
     configure_requires   => { 'Module::Build' => '0.38' },
     requires             => {
-        perl => '5.010001',
-        # 'Exporter'                      => '0',
+        perl => '5.008001',
         'parent'                        => '0',
-        # 'Plack'                         => '0.9949',
+        'Data::OptList' => 0,
+        'Module::Load' => 0,
+        'Class::Method::Modifiers' => 0,
+        'Module::Build' => '0.38',
+        'Class::Accessor::Lite' => 0,
+
+        # markdown plugin
+        'Pod::Markdown' => 0,
+        # ppport plugin
+        'Devel::PPPort' => 0,
     },
 
     no_index    => { 'directory' => [ 'inc' ] },
