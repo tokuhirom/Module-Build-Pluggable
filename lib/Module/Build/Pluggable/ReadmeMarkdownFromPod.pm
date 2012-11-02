@@ -1,8 +1,8 @@
-package Module::Build::Pluggable::Plugin::ReadmeMarkdownFromPod;
+package Module::Build::Pluggable::ReadmeMarkdownFromPod;
 use strict;
 use warnings;
 use utf8;
-use parent qw/Module::Build::Pluggable::Plugin/;
+use parent qw/Module::Build::Pluggable::Base/;
 use Class::Accessor::Lite (
     ro => [qw/filename clean/],
 );

@@ -4,8 +4,7 @@ use Module::Build;
 use Module::Build::Pluggable (
     'PPPort', # => 'lib/ppport.h'
     'ReadmeMarkdownFromPod',
-    # 'Repository',
-    'GithubMeta',
+    'Repository',
 );
 
 my $mbp = Module::Build::Pluggable->new(

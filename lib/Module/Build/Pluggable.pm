@@ -33,6 +33,8 @@ sub _mksrc {
     my ($klass, $opts) = @_;
     local $Data::Dumper::Terse = 1;
     local $Data::Dumper::Indent = 0;
+    # XXX Do not install modifiers multiple times.
+    # We need only one modifier. And complex data.
     return render_mt(<<'...', _mkpluginname($klass), Data::Dumper::Dumper($opts));
 ? my ($klass, $opts) = @_;
 install_modifier(__PACKAGE__, 'around', 'resume', sub {
@@ -50,7 +52,7 @@ install_modifier(__PACKAGE__, 'around', 'resume', sub {
 
 sub _mkpluginname {
     my $module = shift;
-    $module = $module =~ s/^\+// ? $module : "Module::Build::Pluggable::Plugin::$module";
+    $module = $module =~ s/^\+// ? $module : "Module::Build::Pluggable::$module";
     $module;
 }
 

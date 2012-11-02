@@ -1,8 +1,8 @@
-package Module::Build::Pluggable::Plugin::PPPort;
+package Module::Build::Pluggable::PPPort;
 use strict;
 use warnings;
 use utf8;
-use parent qw/Module::Build::Pluggable::Plugin/;
+use parent qw/Module::Build::Pluggable::Base/;
 use Class::Accessor::Lite (
     ro => [qw/version filename/],
 );

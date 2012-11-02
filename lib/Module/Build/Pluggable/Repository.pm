@@ -1,8 +1,8 @@
-package Module::Build::Pluggable::Plugin::Repository;
+package Module::Build::Pluggable::Repository;
 use strict;
 use warnings;
 use utf8;
-use parent qw/Module::Build::Pluggable::Plugin/;
+use parent qw/Module::Build::Pluggable::Base/;
 
 sub _execute {
     my ($command) = @_;

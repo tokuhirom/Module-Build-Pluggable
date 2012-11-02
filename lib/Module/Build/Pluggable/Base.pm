@@ -1,4 +1,4 @@
-package Module::Build::Pluggable::Plugin;
+package Module::Build::Pluggable::Base;
 use strict;
 use warnings;
 use utf8;
