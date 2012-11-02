@@ -19,14 +19,32 @@ sub import {
     my $class = shift;
     my $pkg = caller(0);
     my $optlist = Data::OptList::mkopt(\@_);
-    $OPTIONS = $optlist;
+    $OPTIONS = [map { [ _mkpluginname($_->[0]), $_->[1] ] } @$optlist];
+
+    _author_requires(map { $_->[0] } @$OPTIONS);
+
     my $code = join('',
         'use Class::Method::Modifiers qw/install_modifier/;',
-        map { _mksrc(@$_) } @$optlist
+        map { _mksrc(@$_) } @$OPTIONS
     );
     $SUBCLASS = Module::Build->subclass(
         code => $code,
     );
+}
+
+sub _author_requires {
+    my @devmods = @_;
+    my @not_available;
+    for my $mod (@devmods) {
+        eval qq{require $mod} or push @not_available, $mod;
+    }
+    if (@not_available) {
+        print qq{# The following modules are not available.\n};
+        print qq{# `$^X $0 | cpanm` will install them:\n};
+        print $_, "\n" for @not_available;
+        print "\n";
+        exit -1;
+    }
 }
 
 sub _mksrc {
@@ -35,7 +53,7 @@ sub _mksrc {
     local $Data::Dumper::Indent = 0;
     # XXX Do not install modifiers multiple times.
     # We need only one modifier. And complex data.
-    return render_mt(<<'...', _mkpluginname($klass), Data::Dumper::Dumper($opts));
+    return render_mt(<<'...', $klass, Data::Dumper::Dumper($opts));
 ? my ($klass, $opts) = @_;
 install_modifier(__PACKAGE__, 'around', 'resume', sub {
     my $orig = shift;
@@ -68,7 +86,6 @@ sub _init {
     my $self = shift;
     for my $opt (@$OPTIONS) {
         my ($module, $opts) = @$opt;
-        $module = _mkpluginname($module);
         $opts ||= +{};
         Module::Load::load($module);
         my $plugin = $module->new(builder => $self->{builder}, %$opts);
