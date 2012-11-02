@@ -48,5 +48,7 @@ sub configure_requires {
     Module::Build::Pluggable::Util->add_prereqs($self->builder, 'configure_requires', @_);
 }
 
+sub log_warn { shift->builder->log_warn(@_) }
+
 1;
 

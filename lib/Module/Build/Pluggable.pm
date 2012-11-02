@@ -40,7 +40,9 @@ install_modifier(__PACKAGE__, 'around', 'resume', sub {
     my $builder = $orig->(@_);
     use <?= $klass ?>;
     my $plugin = <?= $klass ?>->new(builder => $builder, %{<?= $opts ?> || +{}});
-    $plugin->HOOK_build();
+    if ($plugin->can('HOOK_build')) {
+        $plugin->HOOK_build();
+    }
     return $builder;
 });
 ...
@@ -75,7 +77,9 @@ sub _init {
                 $module, $module->VERSION,
             );
         }
-        $plugin->HOOK_configure();
+        if ($plugin->can('HOOK_configure')) {
+            $plugin->HOOK_configure();
+        }
     }
 }
 
