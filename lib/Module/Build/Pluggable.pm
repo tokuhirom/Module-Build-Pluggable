@@ -32,6 +32,7 @@ sub _author_requires {
     my @devmods = @_;
     my @not_available;
     for my $mod (@devmods) {
+        ## no critic.
         eval qq{require $mod} or push @not_available, $mod;
     }
     if (@not_available) {
