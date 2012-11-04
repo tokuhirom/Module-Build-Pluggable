@@ -4,6 +4,8 @@ use warnings;
 use utf8;
 use parent qw/Module::Build::Pluggable::Base/;
 
+our $VERSION = '0.01';
+
 sub _execute {
     my ($command) = @_;
     `$command`;
