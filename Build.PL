@@ -26,8 +26,6 @@ my $build = Module::Build->new(
         'File::Basename' => 0,
         'File::Path' => 0,
 
-        # markdown plugin
-        'Pod::Markdown' => 0,
         # ppport plugin
         'Devel::PPPort' => 3.19,
     },
