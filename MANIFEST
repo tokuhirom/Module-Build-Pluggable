@@ -14,6 +14,7 @@ lib/Module/Build/Pluggable/PPPort.pm
 lib/Module/Build/Pluggable/ReadmeMarkdownFromPod.pm
 lib/Module/Build/Pluggable/Repository.pm
 lib/Module/Build/Pluggable/Util.pm
+lib/Test/Module/Build/Pluggable.pm
 LICENSE
 MANIFEST			This list of files
 META.json
