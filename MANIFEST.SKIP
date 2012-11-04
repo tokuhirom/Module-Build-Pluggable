@@ -92,3 +92,6 @@ perltidy.ERR$
 \B\.gitignore
 \.bak$
 ^t/tmp/
+^eg/MYMETA.json$
+^eg/MYMETA.yml$
+^eg/ppport.h$
