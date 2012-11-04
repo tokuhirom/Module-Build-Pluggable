@@ -6,10 +6,12 @@ use File::Spec;
 use lib File::Spec->rel2abs('t/lib/');
 use File::Path;
 
+BEGIN {
 rmtree 't/tmp/';
 mkpath 't/tmp/';
 
 chdir 't/tmp/';
+}
 
 use Module::Build::Pluggable (
     'T1',
