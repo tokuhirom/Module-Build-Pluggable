@@ -1,8 +1,24 @@
 .travis.yml
 Build.PL
 Changes
+eg/Build.PL
+eg/lib/Eg.pm
+eg/MANIFEST
+eg/MYMETA.json
+eg/MYMETA.yml
+eg/ppport.h
+eg/README.mkdn
 lib/Module/Build/Pluggable.pm
+lib/Module/Build/Pluggable/Base.pm
+lib/Module/Build/Pluggable/PPPort.pm
+lib/Module/Build/Pluggable/ReadmeMarkdownFromPod.pm
+lib/Module/Build/Pluggable/Repository.pm
+lib/Module/Build/Pluggable/Util.pm
+LICENSE
 MANIFEST			This list of files
+META.json
+META.yml
+README
 t/00_compile.t
 xt/01_podspell.t
 xt/02_perlcritic.t
