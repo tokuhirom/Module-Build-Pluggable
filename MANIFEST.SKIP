@@ -91,3 +91,4 @@ perltidy.ERR$
 ^MANIFEST\.SKIP
 \B\.gitignore
 \.bak$
+^t/tmp/
