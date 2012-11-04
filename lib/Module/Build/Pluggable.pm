@@ -1,7 +1,7 @@
 package Module::Build::Pluggable;
 use strict;
 use warnings;
-use 5.010001;
+use 5.008001;
 our $VERSION = '0.01';
 use Module::Build;
 
