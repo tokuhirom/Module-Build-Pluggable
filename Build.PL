@@ -23,7 +23,7 @@ my $build = Module::Build->new(
         # markdown plugin
         'Pod::Markdown' => 0,
         # ppport plugin
-        'Devel::PPPort' => 0,
+        'Devel::PPPort' => 3.19,
     },
 
     no_index    => { 'directory' => [ 'inc' ] },

@@ -53,9 +53,9 @@ sub log_info { shift->builder->log_info(@_) }
 
 # taken from  M::I::Can
 # Check if we can run some command
-use ExtUtils::MakeMaker;
 sub can_run {
     my ($self, $cmd) = @_;
+    require ExtUtils::MakeMaker;
 
     my $_cmd = $cmd;
     return $_cmd if (-x $_cmd or $_cmd = MM->maybe_command($_cmd));
@@ -69,5 +69,56 @@ sub can_run {
 
     return;
 }
+
 1;
+__END__
+
+=head1 NAME
+
+Module::Build::Pluggable::Base - Base object for plugins
+
+=head1 SYNOPSIS
+
+    package My::Module::Build::Plugin;
+    use parent qw/Module::Build::Pluggable::Base/;
+
+=head1 DESCRIPTION
+
+This is a abstract base class for Module::Build::Pluggable.
+
+=head1 METHODS
+
+=over 4
+
+=item $self->builder_class() : Str
+
+Get a class name for Module::Build's subclass.
+
+=item $self->add_before_action_modifier($action_name: Str, $callback: Code)
+
+    $self->add_before_action_modifier('build' => \&code);
+
+Add a 'before' action method modifier.
+
+=item $self->add_action($action_name: Str, $callback: Code)
+
+Add a new action for Module::Build.
+
+=item $self->build_requires($module_name:Str[, $version:Str])
+
+Add a build dependencies.
+
+=item $self->configure_requires($module_name:Str[, $version:Str])
+
+Add a configure dependencies.
+
+=item $self->log_info($msg: Str)
+
+Output log in INFO level.
+
+=item $self->log_warn($msg: Str)
+
+Output log in WARN level.
+
+=back
 

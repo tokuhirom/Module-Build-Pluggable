@@ -17,11 +17,13 @@ sub import {
     my $class = shift;
     my $pkg = caller(0);
     return unless @_;
-
+    
     my $optlist = Data::OptList::mkopt(\@_);
-    $OPTIONS = [map { [ _mkpluginname($_->[0]), $_->[1] ] } @$optlist];
+       $optlist = [map { [ _mkpluginname($_->[0]), $_->[1] ] } @$optlist];
 
-    _author_requires(map { $_->[0] } @$OPTIONS);
+    _author_requires(map { $_->[0] } @$optlist);
+
+    push @$OPTIONS, @$optlist;
 
     $SUBCLASS = Module::Build->subclass(
         code => _mksrc(),
@@ -126,21 +128,40 @@ __END__
 
 =head1 NAME
 
-Module::Build::Pluggable - ...
+Module::Build::Pluggable - Module::Build meets plugins
 
 =head1 SYNOPSIS
 
-  use Module::Build::Pluggable;
+    use Module::Build::Pluggable (
+        'Repository',
+        'ReadmeMarkdownFromPod',
+        'PPPort',
+    );
+
+    my $builder = Module::Build::Pluggable->new(
+        ... # normal M::B args
+    );
+    $builder->create_build_script();
 
 =head1 DESCRIPTION
 
-Module::Build::Pluggable is
+Module::Build::Pluggable adds pluggability for Module::Build.
+
+=head1 HOW CAN I WRITE MY OWN PLUGIN?
+
+Module::Build::Pluggable call B<HOOK_configure> on configuration step, and B<HOOK_build> on build step.
+
+That's all.
+
+And if you want a help, you can use L<Module::Build::Pluggable::Base> as base class.
 
 =head1 AUTHOR
 
 Tokuhiro Matsuno E<lt>tokuhirom AAJKLFJEF@ GMAIL COME<gt>
 
 =head1 SEE ALSO
+
+This module built on L<Module::Build>.
 
 =head1 LICENSE
 

@@ -58,3 +58,9 @@ Gosuke
 Miyashita
 mysqldiff
 mmm
+plugins
+Str
+Default
+mkdn
+ppport.h
+pluggability

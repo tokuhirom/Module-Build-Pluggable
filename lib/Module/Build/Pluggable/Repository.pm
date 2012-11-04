@@ -74,11 +74,25 @@ sub _find_repo {
 }
 
 1;
+__END__
+
+=head1 NAME
+
+Module::Build::Pluggable::Repository - set repository information automatically
+
+=head1 SYNOPSIS
+
+    use Module::Build::Pluggable (
+        'Repository'
+    );
+
+=head1 OPTIONS
+
+There is no options.
+
 =head1 AUTHORS
 
 Ported to M::B::P by Tokuhiro Matsuno
 
 Most of codes taken from L<Module::Install::Repository>
-
-
 

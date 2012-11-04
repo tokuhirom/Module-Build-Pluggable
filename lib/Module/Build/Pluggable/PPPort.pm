@@ -35,4 +35,23 @@ sub HOOK_build {
 }
 
 1;
+__END__
+
+=head1 NAME
+
+Module::Build::Pluggable::PPPort - Generate ppport.h
+
+=head1 SYNOPSIS
+
+    use Module::Build::Pluggable (
+        'PPPort',
+    );
+
+=head1 DESCRIPTION
+
+Generate ppport.h automatically.
+
+=head1 AUTHOR
+
+Tokuhiro Matsuno
 
