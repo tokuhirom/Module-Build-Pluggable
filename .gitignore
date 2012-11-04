@@ -18,3 +18,4 @@ META.yml
 README
 ./Build
 ./_build/
+t/tmp/

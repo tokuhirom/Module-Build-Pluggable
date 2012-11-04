@@ -74,7 +74,7 @@ sub new {
     my $builder = $SUBCLASS->new(@_);
     my $self = bless { builder => $builder }, $class;
     $self->_init();
-    $self->call_triggers_all('build', $builder, $OPTIONS);
+    $self->call_triggers_all('configure', $builder, $OPTIONS);
     return $self;
 }
 
