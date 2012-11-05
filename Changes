@@ -1,5 +1,9 @@
 Revision history for Perl extension Module::Build::Pluggable
 
+0.03
+
+    - remove ppport plugin from core
+
 0.02
 
     - depend on perl 5.8
