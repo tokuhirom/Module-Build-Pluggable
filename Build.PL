@@ -25,9 +25,6 @@ my $build = Module::Build->new(
         'File::Temp' => 0,
         'File::Basename' => 0,
         'File::Path' => 0,
-
-        # ppport plugin
-        'Devel::PPPort' => 3.19,
     },
 
     no_index    => { 'directory' => [ 'inc' ] },
