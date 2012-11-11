@@ -72,7 +72,9 @@ sub _mkpluginname {
 
 sub new {
     my $class = shift;
-    my $builder = $SUBCLASS->new(@_);
+    my %args = @_;
+    $class->call_triggers_all('prepare', \%args);
+    my $builder = $SUBCLASS->new(%args);
     my $self = bless { builder => $builder }, $class;
     $self->_init();
     $self->call_triggers_all('configure', $builder, $OPTIONS);
@@ -150,7 +152,7 @@ Module::Build::Pluggable adds pluggability for Module::Build.
 
 =head1 HOW CAN I WRITE MY OWN PLUGIN?
 
-Module::Build::Pluggable call B<HOOK_configure> on configuration step, and B<HOOK_build> on build step.
+Module::Build::Pluggable call B<HOOK_prepare> on preparing arguments for C<< Module::Build->new >>, B<HOOK_configure> on configuration step, and B<HOOK_build> on build step.
 
 That's all.
 
