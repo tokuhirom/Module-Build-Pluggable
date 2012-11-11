@@ -73,7 +73,7 @@ sub _mkpluginname {
 sub new {
     my $class = shift;
     my %args = @_;
-    $class->call_triggers_all('prepare', \%args);
+    $class->call_triggers_all('prepare', undef, $OPTIONS, \%args);
     my $builder = $SUBCLASS->new(%args);
     my $self = bless { builder => $builder }, $class;
     $self->_init();
@@ -97,21 +97,21 @@ sub _init {
 }
 
 sub call_triggers_all {
-    my ($class, $type, $builder, $options) =@_;
+    my ($class, $type, $builder, $options, $args) =@_;
     for my $opt (@$options) {
         my ($module, $opts) = @$opt;
-        $class->call_trigger($type, $builder, $module, $opts);
+        $class->call_trigger($type, $builder, $module, $opts, $args);
     }
 }
 
 sub call_trigger {
-    my ($class, $type, $builder, $module, $opts) =@_;
+    my ($class, $type, $builder, $module, $opts, $args) =@_;
 
     Module::Load::load($module);
     my $plugin = $module->new(builder => $builder, %{ $opts || +{} });
     my $method = "HOOK_$type";
     if ($plugin->can($method)) {
-        $plugin->$method();
+        $plugin->$method($args);
     }
 }
 

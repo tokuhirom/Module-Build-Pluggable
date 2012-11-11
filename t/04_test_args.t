@@ -15,6 +15,7 @@ describe 'Test::Module::Build::Pluggable::run_build_pl passes @ARGV' => sub {
         $test->run_build_pl();
         my $params = $test->read_file('ddd');
         is($params, '0', 'arguments for read_file is passed to @ARGV');
+        ok(-f 'called');
         note $params;
     };
     context 'with -g option' => sub {
@@ -22,6 +23,7 @@ describe 'Test::Module::Build::Pluggable::run_build_pl passes @ARGV' => sub {
         $test->run_build_pl('-g');
         my $params = $test->read_file('ddd');
         is($params, '1', 'arguments for read_file is passed to @ARGV');
+        ok(-f 'called');
         note $params;
     };
 };
@@ -40,8 +42,13 @@ use parent qw/Module::Build::Pluggable::Base/;
 
 sub HOOK_prepare {
     my ($class, $args) = @_;
-    die "Other plugins uses -g option" if $args{get_options}->{g};
-    $args{get_options}->{g} = { type => '!' };
+
+    open my $fh, '>', 'called';
+    print {$fh} 1;
+    close $fh;
+
+    die "Other plugins uses -g option" if $args->{get_options}->{g};
+    $args->{get_options}->{g} = { type => '!' };
 }
 
 1;
@@ -49,12 +56,11 @@ sub HOOK_prepare {
 
     $test->write_file('Build.PL', <<'...');
 use strict;
-use Module::Build;
+use Module::Build::Pluggable (
+    'Extra'
+);
 
-my $builder = Module::Build->new(
-    get_options => {
-        'g' => {type => '!'},
-    },
+my $builder = Module::Build::Pluggable->new(
     dist_name => 'Eg',
     dist_version => 0.01,
     dist_abstract => 'test',
@@ -67,7 +73,7 @@ my $builder = Module::Build->new(
 );
 $builder->create_build_script();
 
-open my $fh, '>', 'ddd';
+open my $fh, '>', 'ddd' or die $!;
 print {$fh} ($builder->args('g') ? 1 : 0);
 close $fh;
 ...
