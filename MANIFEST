@@ -4,7 +4,6 @@ Changes
 eg/Build.PL
 eg/lib/Eg.pm
 eg/MANIFEST
-eg/README.mkdn
 lib/Module/Build/Pluggable.pm
 lib/Module/Build/Pluggable/Base.pm
 lib/Module/Build/Pluggable/Repository.pm

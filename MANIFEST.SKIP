@@ -95,3 +95,4 @@ perltidy.ERR$
 ^eg/MYMETA.json$
 ^eg/MYMETA.yml$
 ^eg/ppport.h$
+^eg/README.mkdn$
