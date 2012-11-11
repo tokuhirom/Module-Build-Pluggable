@@ -48,6 +48,16 @@ sub configure_requires {
     Module::Build::Pluggable::Util->add_prereqs($self->builder, 'configure_requires', @_);
 }
 
+sub requires {
+    my $self = shift;
+    Module::Build::Pluggable::Util->add_prereqs($self->builder, 'requires', @_);
+}
+
+sub add_extra_compiler_flags {
+    my ($self, @flags) = @_;
+    $self->builder->extra_compiler_flags($self->builder->extra_compiler_flags, @flags);
+}
+
 sub log_warn { shift->builder->log_warn(@_) }
 sub log_info { shift->builder->log_info(@_) }
 

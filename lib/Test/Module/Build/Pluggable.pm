@@ -6,8 +6,8 @@ use utf8;
 use File::Temp qw/tempdir/;
 use Cwd;
 use Test::SharedFork;
-use File::Basename;
-use File::Path;
+use File::Basename ();
+use File::Path ();
 
 sub new {
     my $class = shift;
@@ -17,6 +17,8 @@ sub new {
     }, $class;
     $self->{origcwd} = Cwd::getcwd();
     $self->{dir} = tempdir(CLEANUP => 1);
+    $self->{libdir} = tempdir(CLEANUP => 1);
+    unshift @INC, $self->{libdir};
     chdir $self->{dir};
     return $self;
 }
@@ -26,11 +28,26 @@ sub DESTROY {
     chdir($self->{origcwd});
 }
 
+sub write_plugin {
+    my ($self, $package, $content) = @_;
+
+    my $ofile = do {
+        my $path = $package;
+        $path =~ s!::!/!g;
+        $path .= ".pm";
+        File::Spec->catfile($self->{libdir}, $path);
+    };
+    File::Path::mkpath(File::Basename::dirname($ofile));
+    open my $fh, '>', $ofile or die "Cannot open $ofile, $!";
+    print {$fh} $content;
+    close $fh;
+}
+
 sub write_file {
     my ($self, $fname, $content) = @_;
 
-    if (my $dir = dirname($fname)) {
-        mkpath($dir);
+    if (my $dir = File::Basename::dirname($fname)) {
+        File::Path::mkpath($dir);
     }
 
     open my $fh, '>', $fname or die "Cannot open $fname: $!";
