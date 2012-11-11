@@ -55,7 +55,7 @@ sub requires {
 
 sub add_extra_compiler_flags {
     my ($self, @flags) = @_;
-    $self->builder->extra_compiler_flags($self->builder->extra_compiler_flags, @flags);
+    $self->builder->extra_compiler_flags(@{$self->builder->extra_compiler_flags}, @flags);
 }
 
 sub log_warn { shift->builder->log_warn(@_) }
