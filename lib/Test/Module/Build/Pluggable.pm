@@ -77,13 +77,14 @@ sub run_build_script {
 }
 
 sub run_build_pl {
-    my $self = shift;
+    my ($self, @args) = @_;
 
     my $pid = fork();
     die "fork failed: $!" unless defined $pid;
     if ($pid) { # parent
         waitpid $pid, 0;
     } else { # child
+        local @ARGV = @args;
         do 'Build.PL';
         ::ok(-f 'Build', 'Created Build file') or ::diag $@;
         exit 0;
