@@ -16,6 +16,9 @@ META.yml
 README
 t/00_compile.t
 t/01_simple.t
+t/02_requires.t
+t/03_add_extra_compiler_flags.t
+t/04_test_args.t
 t/lib/Module/Build/Pluggable/T1.pm
 xt/01_podspell.t
 xt/02_perlcritic.t
