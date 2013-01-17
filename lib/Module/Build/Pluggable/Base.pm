@@ -24,7 +24,12 @@ sub builder_class {
 # build
 sub add_before_action_modifier {
     my ($self, $target, $code) = @_;
+
     my $builder = $self->builder_class;
+    unless ($builder) {
+        Carp::confess("You can call add_before_action_modifier method from HOOK_build method only.");
+    }
+
     install_modifier($builder, 'before', "ACTION_$target", $code);
 }
 
@@ -32,6 +37,10 @@ sub add_before_action_modifier {
 sub add_action {
     my ($self, $name, $code) = @_;
     my $builder = $self->builder_class;
+    unless ($builder) {
+        Carp::confess("You can call add_action method from HOOK_build method only.");
+    }
+
     no strict 'refs';
     *{"$builder\::ACTION_$name"} = $code;
 }
@@ -104,23 +113,33 @@ This is a abstract base class for Module::Build::Pluggable.
 
 Get a class name for Module::Build's subclass.
 
+You cannot call this method in C<HOOK_prepare> and B<HOOK_configure> phase.
+
 =item $self->add_before_action_modifier($action_name: Str, $callback: Code)
 
     $self->add_before_action_modifier('build' => \&code);
 
 Add a 'before' action method modifier.
 
+You need to call this method in C<HOOK_build> phase.
+
 =item $self->add_action($action_name: Str, $callback: Code)
 
 Add a new action for Module::Build.
+
+You need to call this method in C<HOOK_build> phase.
 
 =item $self->build_requires($module_name:Str[, $version:Str])
 
 Add a build dependencies.
 
+You need to call this method in C<HOOK_configure> phase.
+
 =item $self->configure_requires($module_name:Str[, $version:Str])
 
 Add a configure dependencies.
+
+You need to call this method in C<HOOK_configure> phase.
 
 =item $self->log_info($msg: Str)
 
