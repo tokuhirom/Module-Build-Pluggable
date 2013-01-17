@@ -7,6 +7,7 @@ use Module::Build;
 
 our $SUBCLASS;
 our $OPTIONS;
+our @REQUIRED_PLUGINS;
 
 use Data::OptList;
 use Data::Dumper; # as serializer.
@@ -19,6 +20,7 @@ sub import {
     return unless @_;
     
     my $optlist = Data::OptList::mkopt(\@_);
+       @REQUIRED_PLUGINS = map { _mkpluginname($_) } grep !/^\+/, map { $_->[0] } @$optlist;
        $optlist = [map { [ _mkpluginname($_->[0]), $_->[1] ] } @$optlist];
 
     _author_requires(map { $_->[0] } @$optlist);
@@ -84,8 +86,7 @@ sub new {
 sub _init {
     my $self = shift;
     # setup (build|configure) requires
-    for my $opt (@$OPTIONS) {
-        my ($module, $opts) = @$opt;
+    for my $module (@REQUIRED_PLUGINS) {
         for my $type (qw/configure_requires build_requires/) {
             Module::Build::Pluggable::Util->add_prereqs(
                 $self->{builder},
