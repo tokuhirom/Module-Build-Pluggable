@@ -19,3 +19,5 @@ README
 ./Build
 ./_build/
 t/tmp/
+eg/Build
+eg/_build/

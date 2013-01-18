@@ -1,5 +1,12 @@
 Revision history for Perl extension Module::Build::Pluggable
 
+0.05
+
+    - do not add + prefix-ed modules to (build|configure)_requires automatically
+      (tokuhirom)
+    - added more documents and more explicit error messages.
+      (tokuhirom)
+
 0.04
 
     - added HOOK_prepare phase
