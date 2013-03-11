@@ -1,5 +1,10 @@
 Revision history for Perl extension Module::Build::Pluggable
 
+0.06 2013-03-11T18:36:20
+
+    - Module::Build::Pluggable::GithubMeta
+      (tokuhirom)
+
 0.05
 
     - do not add + prefix-ed modules to (build|configure)_requires automatically
