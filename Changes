@@ -1,5 +1,10 @@
 Revision history for Perl extension Module::Build::Pluggable
 
+0.08 2013-03-15T08:33:43
+
+    - Added add_around_action_modifier to M::B::P::Base
+      (tokuhirom)
+
 0.07 2013-03-11T19:00:02
 
     - Added docs for Module::Build::Pluggable::GithubMeta

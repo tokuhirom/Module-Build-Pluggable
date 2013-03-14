@@ -34,6 +34,18 @@ sub add_before_action_modifier {
 }
 
 # build
+sub add_around_action_modifier {
+    my ($self, $target, $code) = @_;
+
+    my $builder = $self->builder_class;
+    unless ($builder) {
+        Carp::confess("You can call add_around_action_modifier method from HOOK_build method only.");
+    }
+
+    install_modifier($builder, 'around', "ACTION_$target", $code);
+}
+
+# build
 sub add_action {
     my ($self, $name, $code) = @_;
     my $builder = $self->builder_class;
@@ -120,6 +132,14 @@ You cannot call this method in C<HOOK_prepare> and B<HOOK_configure> phase.
     $self->add_before_action_modifier('build' => \&code);
 
 Add a 'before' action method modifier.
+
+You need to call this method in C<HOOK_build> phase.
+
+=item $self->add_around_action_modifier($action_name: Str, $callback: Code)
+
+    $self->add_around_action_modifier('build' => \&code);
+
+Add a 'around' action method modifier.
 
 You need to call this method in C<HOOK_build> phase.
 

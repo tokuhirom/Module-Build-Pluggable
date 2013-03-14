@@ -2,7 +2,7 @@ package Module::Build::Pluggable;
 use strict;
 use warnings;
 use 5.008001;
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 use Module::Build;
 
 our $SUBCLASS;
