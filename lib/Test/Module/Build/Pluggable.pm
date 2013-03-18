@@ -13,6 +13,7 @@ sub new {
     my $class = shift;
     my %args = @_==1 ? %{$_[0]} : @_;
     my $self = bless {
+        files => [],
         %args
     }, $class;
     $self->{origcwd} = Cwd::getcwd();
@@ -41,6 +42,8 @@ sub write_plugin {
     open my $fh, '>', $ofile or die "Cannot open $ofile, $!";
     print {$fh} $content;
     close $fh;
+
+    push @{$self->{files}}, $ofile;
 }
 
 sub write_file {
@@ -53,6 +56,18 @@ sub write_file {
     open my $fh, '>', $fname or die "Cannot open $fname: $!";
     print $fh $content;
     close $fh;
+
+    push @{$self->{files}}, $fname;
+}
+
+sub write_manifest {
+    my $self = shift;
+
+    open my $fh, '>', 'MANIFEST' or die "Cannot open MANIFEST: $!";
+    for (@{$self->{files}}) {
+        print $fh $_ . "\n";
+    }
+    close $fh;
 }
 
 sub read_file {
@@ -63,13 +78,14 @@ sub read_file {
 }
 
 sub run_build_script {
-    my $self = shift;
+    my ($self, @args) = @_;
 
     my $pid = fork();
     die "fork failed: $!" unless defined $pid;
     if ($pid) { # parent
         waitpid $pid, 0;
     } else { # child
+        local @ARGV = (@args);
         do 'Build';
         ::ok(!$@) or ::diag $@;
         exit 0;
@@ -107,3 +123,22 @@ Test::Module::Build::Pluggable - Test your plugin
     $test->run_build_script();
     # test...
 
+=head1 METHODS
+
+=over 4
+
+=item my $test = Test::Module::Build::Pluggable->new()
+
+=item $test->write_file($filename, $src);
+
+=item $test->write_plugin($package, $src);
+
+=item $test->write_manifest();
+
+Write manifest from file list. The file list means list of file name added by C<< $test->write_file >> and C<< $test->write_plugin >>
+
+=item $test->run_build_pl();
+
+=item $test->run_build_script();
+
+=back
