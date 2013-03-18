@@ -1,5 +1,10 @@
 Revision history for Perl extension Module::Build::Pluggable
 
+0.09 2013-03-18T18:05:53
+
+    - Test::Module::Build::Pluggable: Added write_manifest() method.
+    - Test::Module::Build::Pluggable: run_build_script() method can handle arguments.
+
 0.08 2013-03-15T08:33:43
 
     - Added add_around_action_modifier to M::B::P::Base
