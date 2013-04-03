@@ -13,7 +13,6 @@ pm_to_blib
 blib/
 META.yml
 MYMETA.*
-META.json
 META.yml
 README
 ./Build
@@ -21,3 +20,8 @@ README
 t/tmp/
 eg/Build
 eg/_build/
+/Module-Build-Pluggable-*
+/.build
+/_build_params
+!Build/
+!META.json

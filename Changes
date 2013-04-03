@@ -1,5 +1,7 @@
 Revision history for Perl extension Module::Build::Pluggable
 
+{{$NEXT}}
+
 0.09 2013-03-18T18:05:53
 
     - Test::Module::Build::Pluggable: Added write_manifest() method.
