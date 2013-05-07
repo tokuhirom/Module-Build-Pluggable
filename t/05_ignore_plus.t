@@ -61,6 +61,7 @@ my $builder = Module::Build::Pluggable->new(
 );
 $builder->create_build_script();
 ...
+    $test->write_file('MANIFEST', join("\n", qw(MANIFEST)));
 
 $test->run_build_pl();
 my $meta = $test->read_file('MYMETA.yml');

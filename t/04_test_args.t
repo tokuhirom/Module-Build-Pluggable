@@ -78,5 +78,7 @@ print {$fh} ($builder->args('g') ? 1 : 0);
 close $fh;
 ...
 
+    $test->write_file('MANIFEST', join("\n", qw(MANIFEST)));
+
     return $test;
 }

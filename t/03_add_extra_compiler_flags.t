@@ -44,6 +44,8 @@ my $builder = Module::Build::Pluggable->new(
 );
 $builder->create_build_script();
 ...
+
+    $test->write_file('MANIFEST', join("\n", qw(MANIFEST)));
     $test->run_build_pl();
     my $params = $test->read_file('_build/build_params');
     like($params, qr/-Wall/, 'added extra compiler flags');

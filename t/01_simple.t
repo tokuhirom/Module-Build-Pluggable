@@ -5,12 +5,15 @@ use Test::More;
 use File::Spec;
 use lib File::Spec->rel2abs('t/lib/');
 use File::Path;
+use t::Util;
 
 BEGIN {
 rmtree 't/tmp/';
 mkpath 't/tmp/';
 
 chdir 't/tmp/';
+
+spew('MANIFEST', '');
 }
 
 use Module::Build::Pluggable (
