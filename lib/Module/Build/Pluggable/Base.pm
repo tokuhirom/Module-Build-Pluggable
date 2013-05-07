@@ -161,11 +161,11 @@ Add a configure dependencies.
 
 You need to call this method in C<HOOK_configure> phase.
 
-=item $self->log_info($msg: Str)
+=item C<< $self->log_info($msg: Str) >>
 
 Output log in INFO level.
 
-=item $self->log_warn($msg: Str)
+=item C<< $self->log_warn($msg: Str) >>
 
 Output log in WARN level.
 

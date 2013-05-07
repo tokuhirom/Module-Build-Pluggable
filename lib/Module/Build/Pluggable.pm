@@ -2,7 +2,7 @@ package Module::Build::Pluggable;
 use strict;
 use warnings;
 use 5.008001;
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 use Module::Build;
 
 our $SUBCLASS;
@@ -129,6 +129,8 @@ sub AUTOLOAD {
 __END__
 
 =encoding utf8
+
+=for stopwords pluggability
 
 =head1 NAME
 

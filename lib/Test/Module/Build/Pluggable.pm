@@ -14,11 +14,12 @@ sub new {
     my %args = @_==1 ? %{$_[0]} : @_;
     my $self = bless {
         files => [],
+        cleanup => 1,
         %args
     }, $class;
     $self->{origcwd} = Cwd::getcwd();
-    $self->{dir} = tempdir(CLEANUP => 1);
-    $self->{libdir} = tempdir(CLEANUP => 1);
+    $self->{dir} = tempdir(CLEANUP => $self->{cleanup});
+    $self->{libdir} = tempdir(CLEANUP => $self->{cleanup});
     unshift @INC, $self->{libdir};
     chdir $self->{dir};
     return $self;
@@ -72,7 +73,7 @@ sub write_manifest {
 
 sub read_file {
     my ($self, $fname) = @_;
-    open my $fh, '<', $fname or die "Cannot open $fname: $!";
+    open my $fh, '<', $fname or die "Cannot open $fname in @{[ Cwd::getcwd() ]}: $!";
     local $/;
     scalar(<$fh>);
 }
@@ -127,18 +128,18 @@ Test::Module::Build::Pluggable - Test your plugin
 
 =over 4
 
-=item my $test = Test::Module::Build::Pluggable->new()
+=item C<< my $test = Test::Module::Build::Pluggable->new() >>
 
-=item $test->write_file($filename, $src);
+=item C<< $test->write_file($filename, $src); >>
 
-=item $test->write_plugin($package, $src);
+=item C<< $test->write_plugin($package, $src); >>
 
-=item $test->write_manifest();
+=item C<< $test->write_manifest(); >>
 
 Write manifest from file list. The file list means list of file name added by C<< $test->write_file >> and C<< $test->write_plugin >>
 
-=item $test->run_build_pl();
+=item C<< $test->run_build_pl(); >>
 
-=item $test->run_build_script();
+=item C<< $test->run_build_script(); >>
 
 =back

@@ -8,7 +8,9 @@ use File::Path;
 use Test::Module::Build::Pluggable;
 
 subtest 'Module::Build::Pluggable::Base#add_extra_compiler_flags' => sub {
-    my $test = Test::Module::Build::Pluggable->new();
+    my $test = Test::Module::Build::Pluggable->new(
+        cleanup => $ENV{DEBUG} ? 0 : 1,
+    );
 
     $test->write_plugin('Module::Build::Pluggable::Extra', <<'...');
 package Module::Build::Pluggable::Extra;
